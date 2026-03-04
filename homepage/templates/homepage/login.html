@@ -1,0 +1,81 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: url("{% static 'homepage/images/bg.jpg' %}") no-repeat center center fixed;
+            background-size: cover;
+
+            /* THIS centers the login box */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-box {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            width: 300px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        .login-box h2 {
+            margin-bottom: 20px;
+        }
+
+        .login-box input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+        }
+
+        .login-box button {
+            width: 100%;
+            padding: 10px;
+            background: #c62828;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .login-box button:hover {
+            background: #a61c1c;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-box">
+<h2>Online Blood<br>Management System</h2>
+<p class="tagline">Connecting Life Digitally</p>
+       <form method="POST" id="loginForm">
+        {% csrf_token %}
+        {% if messages %}
+            <div class="message-block">
+                {% for message in messages %}
+                    <div class="message {{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <input type="text" id="username" name="username" placeholder="Username" required>
+        <input type="password" id="password" name="password" placeholder="Password" required>
+        <div id="error" style="color:#c62828;margin-bottom:8px"></div>
+        <button type="submit">LOGIN</button>
+</form>
+    <p style="margin-top:12px">Don't have an account? <a href="{% url 'signup' %}">Sign up</a></p>
+    </div>
+</body>
+</html>

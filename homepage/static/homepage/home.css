@@ -1,0 +1,430 @@
+/* ================= NAVBAR ================= */
+.navbar {
+    display: flex;
+    justify-content: flex-start;   /* menu starts from LEFT */
+    align-items: center;
+    background: whitesmoke;
+    padding: 4px 8px;              /* small navbar height */
+    margin: 0;
+    border-bottom: 1px solid #ccc;
+    position: relative;
+    z-index: 10;
+}
+
+/* ================= MENU LIST ================= */
+.menu {
+    list-style: none;
+    display: flex;                 /* 🔥 horizontal */
+    align-items: center;
+    gap: 14px;                     /* space between menu items */
+    margin: 0;
+    padding: 0;
+}
+
+.menu li {
+    display: flex;
+    align-items: center;
+}
+
+/* ================= MENU LINK ================= */
+.menu li a {
+    display:inline-flex;
+    align-items: center;           /* icon + text same line */
+    gap: 42px;                      /* small icon-text gap */
+    padding: 4px 6px;
+
+    color: #ee0707d2;
+    font-size: 16px;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+/* ================= ICON ================= */
+.menu-icon {
+    width: 60px;          /* layout size (small) */
+    height: 45px;
+
+    object-fit: contain;
+    flex-shrink: 0;
+
+    transform: scale(2.4);          /* 👈 visual size */
+    transform-origin: left center;  /* grows to right, not left */
+}
+/* ================= DROPDOWN ================= */
+.dropdown {
+    position: relative; /* anchor */
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 50%;                 /* center under Donor */
+    transform: translateX(-50%);
+
+    background: transparent;
+    border: none;
+    color: white;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    border-radius: 6px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    display: none;
+    z-index: 1000;
+}
+.dropdown-menu.show {
+    display: block;
+}
+.dropdown-menu li {
+    margin: 0;
+    padding: 0;
+}
+
+.dropdown-menu li a {
+    padding: 8px 16px;
+    display: block;
+    text-decoration: none;
+}
+
+.dropdown-menu li a:hover {
+    background: #f2f2f2;
+}
+
+.dropdown-menu a {
+    color: red !important;
+}
+/* ================= PAGE CONTENT ================= */
+.page-content {
+    min-height: calc(100vh - 70px);
+    background-color:white;   /* dark theme */
+    color: white;
+    padding: 20px;
+}
+.donor-form-section {
+    margin-top: 20px;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    width: 60%;
+}
+/* OVERLAY */
+.donor-form-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.45);
+    z-index: 9999;   /* 🔥 THIS FIXES THE BEHIND ISSUE */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.donor-card {
+    width: 650px;          /* ⬅ smaller form */
+    max-width: 90vw;
+    background: #ffffff;
+    padding: 20px 24px;    /* ⬅ reduced padding */
+    border-radius: 10px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+}
+
+/* TITLE */
+.donor-title {
+    text-align: center;
+    margin-bottom: 14px;
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.donor-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 30px;   /* was 50px */
+    row-gap: 12px;      /* was 18px */
+}
+
+/* FORM GROUP */
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-weight: 600;
+    margin-bottom: 6px;
+    font-size: 14px;
+}
+
+/* INPUTS */
+.form-group input,
+.form-group select,
+.form-group textarea {
+    padding: 6px 8px;
+    font-size: 14px;
+    margin-top: 4px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+/* ADDRESS FULL WIDTH */
+.full-width {
+    grid-column: span 2;
+}
+
+.form-group textarea {
+    min-height: 70px;
+    resize: vertical;
+}
+
+/* BUTTON */
+.form-actions {
+    grid-column: span 2;
+    margin-top: 18px;
+    display: flex;
+    justify-content: center;
+}
+
+.btn-save {
+    padding: 8px 26px;
+    font-size: 15px;
+    background: #d32f2f;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.btn-save:hover {
+    background: #b71c1c;
+}
+/* HEADER FIX */
+.form-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.form-close {
+    position: absolute;
+    right: 10px;
+    top: 5px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+    color: #666;
+}
+.form-close:hover {
+    color: red;
+}
+
+/* GRID FIX */
+.full-width {
+    grid-column: span 2;
+}
+
+/* BUTTON */
+.btn-save {
+    padding: 10px 28px;
+    background: #d32f2f;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 15px;
+    cursor: pointer;
+}
+.btn-save:hover {
+    background: #b71c1c;
+}
+.close-btn {
+    position: absolute;
+    top: 12px;
+    right: 14px;
+    background: none;
+    border: none;
+    font-size: 26px;
+    font-weight: bold;
+    color: #999;
+    cursor: pointer;
+}
+
+.close-btn:hover {
+    color: red;
+}
+
+.donor-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.donor-table th,
+.donor-table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+.donor-table th {
+    background-color: #b30000;
+    color: white;
+}
+
+.donor-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.donor-table tr:hover {
+    background-color: #ffe6e6;
+}
+
+/* ================= SEARCH POPUP FIX ================= */
+
+.search-card {
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+
+/* center title properly */
+.center-header {
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+/* form layout */
+.search-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 10px;
+}
+
+/* input & select */
+.search-form input,
+.search-form select {
+    width: 260px;
+    padding: 10px;
+    font-size: 15px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    text-align: center;
+    outline: none;
+}
+
+.search-form input:focus,
+.search-form select:focus {
+    border-color: #c62828;
+    box-shadow: 0 0 4px rgba(198, 40, 40, 0.35);
+}
+
+/* button spacing */
+.search-form .btn-save {
+    width: 140px;
+    margin-top: 4px;
+}
+
+/* ================= MESSAGE POPUP ================= */
+.message-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 10000;
+
+    display: flex;
+    align-items: center;     /* 🔥 vertical center */
+    justify-content: center; /* 🔥 horizontal center */
+}
+
+.message-box {
+    background: white;
+    padding: 28px 40px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+    min-width: 320px;
+    max-width: 90vw;
+    animation: popFade 0.25s ease-out;
+}
+
+.message {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.message.success {
+    color: green;
+}
+
+.message.error {
+    color: red;
+}
+
+/* ================= DASHBOARD ================= */
+
+.dashboard {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 22px;
+    max-width: 1000px;
+    margin: 40px auto 25px auto;
+    padding: 0 20px;
+}
+
+.dash-card {
+    background: white;
+    border-radius: 14px;
+    padding: 26px 20px;
+    text-align: center;
+    box-shadow: 0 10px 22px rgba(0,0,0,0.15);
+    font-size: 28px;
+}
+
+.dash-card h3 {
+    margin: 12px 0 8px 0;
+    font-size: 17px;
+    color: #b30000;
+}
+
+.dash-card p {
+    font-size: 30px;
+    font-weight: 700;
+    margin: 0;
+}
+
+/* ================= QUICK ACTIONS ================= */
+
+.quick-actions {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 40px;
+}
+
+.qa-btn {
+    text-decoration: none;
+    background: #d32f2f;
+    color: white;
+    padding: 12px 22px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.18);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.qa-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 18px rgba(0,0,0,0.25);
+}

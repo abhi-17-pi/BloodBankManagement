@@ -1,0 +1,570 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Home | Blood Management</title>
+  <link rel="stylesheet" href="{% static 'homepage/home.css' %}">
+</head>
+<body>
+
+<!-- ================= NAVBAR ================= -->
+<nav class="navbar">
+  <ul class="menu">
+
+    <li class="dropdown">
+      <a href="#" onclick="toggleMenu(event,'donor-menu')">
+        <img src="{% static 'homepage/icons/donor_icon.png' %}" class="menu-icon">
+        <span>Donors ▾</span>
+      </a>
+      <ul class="dropdown-menu" id="donor-menu">
+        <li><a href="/home/?mode=new">New Donor</a></li>
+        <li><a href="/home/?mode=update">Update Donor</a></li>
+        <li><a href="/home/?mode=all">All Donors</a></li>
+      </ul>
+    </li>
+
+    <li class="dropdown">
+      <a href="#" onclick="toggleMenu(event,'search-menu')">
+        <img src="{% static 'homepage/icons/search_icon.png' %}" class="menu-icon">
+        <span>Search Donor ▾</span>
+      </a>
+      <ul class="dropdown-menu" id="search-menu">
+        <li><a href="/home/?mode=location">By Location</a></li>
+        <li><a href="/home/?mode=blood">By Blood Group</a></li>
+      </ul>
+    </li>
+
+    <li class="dropdown">
+      <a href="#" onclick="toggleMenu(event,'stock-menu')">
+        <img src="{% static 'homepage/icons/stock_icon.png' %}" class="menu-icon">
+        <span>Stock ▾</span>
+      </a>
+      <ul class="dropdown-menu" id="stock-menu">
+        <li><a href="/home/?mode=add_stock">Add Stock</a></li>
+        <li><a href="/home/?mode=remove_stock">Remove Stock</a></li>
+        <li><a href="/home/?mode=view_stock">View Stock</a></li>
+      </ul>
+    </li>
+
+    <li class="dropdown">
+      <a href="#" onclick="toggleMenu(event,'delete-menu')">
+        <img src="{% static 'homepage/icons/delete_icon.png' %}" class="menu-icon">
+        <span>Delete Donor ▾</span>
+      </a>
+      <ul class="dropdown-menu" id="delete-menu">
+        <li><a href="/home/?mode=delete">Delete Donor</a></li>
+      </ul>
+    </li>
+
+    <li class="dropdown">
+      <a href="#" onclick="toggleMenu(event,'call-menu')">
+        <img src="{% static 'homepage/icons/call_icon.png' %}" class="menu-icon">
+        <span>Call ▾</span>
+      </a>
+      <ul class="dropdown-menu" id="call-menu">
+        <li><a href="/home/?mode=call">Call Donor</a></li>
+      </ul>
+    </li>
+
+    <li>
+      <a href="{% url 'logout' %}">
+        <img src="{% static 'homepage/icons/logout_icon.png' %}" class="menu-icon">
+        <span>Logout</span>
+      </a>
+    </li>
+
+  </ul>
+</nav>
+
+<!-- ================= NEW DONOR ================= -->
+{% if show_new_form %}
+<div class="donor-form-overlay show">
+    <div class="donor-card">
+
+        <div class="form-header">
+            <h2 class="donor-title">🩸 New Donor Registration</h2>
+            <span class="form-close" onclick="closeForm()">✖</span>
+        </div>
+
+        <form method="post" action="{% url 'new_donor' %}">
+            {% csrf_token %}
+
+            <div class="donor-grid">
+                <div class="form-group">
+                    <label>Donor ID</label>
+                    {{ new_form.donor_id }}
+
+                    <label>Full Name</label>
+                    {{ new_form.name }}
+
+                    <label>Father Name</label>
+                    {{ new_form.father_name }}
+
+                    <label>Mother Name</label>
+                    {{ new_form.mother_name }}
+
+                    <label>Date of Birth</label>
+                    {{ new_form.date_of_birth }}
+                </div>
+
+                <div class="form-group">
+                    <label>Mobile</label>
+                    {{ new_form.mobile }}
+
+                    <label>Gender</label>
+                    {{ new_form.gender }}
+
+                    <label>Email</label>
+                    {{ new_form.email }}
+
+                    <label>Blood Group</label>
+                    {{ new_form.blood_group }}
+
+                    <label>City</label>
+                    {{ new_form.city }}
+                </div>
+
+                <div class="form-group full-width">
+                    <label>Address</label>
+                    {{ new_form.address }}
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-save">Save Donor</button>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>
+{% endif %}
+
+<!-- ================= UPDATE DONOR ================= -->
+{% if show_update_form %}
+<div class="donor-form-overlay show">
+  <div class="donor-card">
+
+    <div class="form-header">
+      <h2 class="donor-title">✏️ Update Donor</h2>
+      <span class="form-close" onclick="closeForm()">✖</span>
+    </div>
+
+    <!-- SEARCH FORM -->
+    {% if not form %}
+    <form method="post" action="{% url 'update_donor' %}">
+      {% csrf_token %}
+      <div class="form-group">
+        <label>Enter Donor ID</label>
+        <input type="text" name="donor_id" required>
+      </div>
+      <div class="form-actions">
+        <button type="submit" name="search" class="btn-save">Search</button>
+      </div>
+    </form>
+    {% endif %}
+
+    <!-- UPDATE FORM -->
+    {% if form %}
+    <form method="post" action="{% url 'update_donor' %}">
+      {% csrf_token %}
+      <input type="hidden" name="donor_id" value="{{ donor.donor_id }}">
+
+      <div class="donor-grid">
+
+        <div class="form-group">
+          <label>Donor ID</label>
+          <input type="text" value="{{ donor.donor_id }}" disabled>
+
+          <label>Name</label>
+          {{ form.name }}
+
+          <label>Father Name</label>
+          {{ form.father_name }}
+
+          <label>Mother Name</label>
+          {{ form.mother_name }}
+
+          <label>Date of Birth</label>
+          {{ form.date_of_birth }}
+        </div>
+
+        <div class="form-group">
+          <label>Mobile</label>
+          {{ form.mobile }}
+
+          <label>Gender</label>
+          {{ form.gender }}
+
+          <label>Email</label>
+          {{ form.email }}
+
+          <label>Blood Group</label>
+          {{ form.blood_group }}
+
+          <label>City</label>
+          {{ form.city }}
+        </div>
+
+        <div class="form-group full-width">
+          <label>Address</label>
+          {{ form.address }}
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" name="update" class="btn-save">Update</button>
+        </div>
+
+      </div>
+    </form>
+    {% endif %}
+
+  </div>
+</div>
+{% endif %}
+
+
+<!-- ================= ALL DONORS ================= -->
+{% if show_all_donor %}
+<div class="donor-form-overlay show">
+  <div class="donor-card" style="max-width:1100px;width:90%;">
+    <div class="form-header">
+      <h2 class="donor-title">📋 All Registered Donors</h2>
+      <span class="form-close" onclick="closeForm()">✖</span>
+    </div>
+    <table class="donor-table">
+      <thead>
+        <tr>
+          <th>ID</th><th>Name</th><th>Blood</th><th>Mobile</th><th>City</th><th>Gender</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for donor in donors %}
+        <tr>
+          <td>{{ donor.donor_id }}</td>
+          <td>{{ donor.name }}</td>
+          <td>{{ donor.blood_group }}</td>
+          <td>{{ donor.mobile }}</td>
+          <td>{{ donor.city }}</td>
+          <td>{{ donor.gender }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="6" align="center">No donors found</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endif %}
+
+<!-- ================= SEARCH LOCATION ================= -->
+{% if show_search_location %}
+<div class="donor-form-overlay show">
+  <div class="donor-card">
+
+    <div class="form-header">
+      <h2 class="donor-title">📍 Search by Location</h2>
+      <span class="form-close" onclick="closeForm()">✖</span>
+    </div>
+
+    {% if not donors %}
+    <form method="post" class="search-form">
+      {% csrf_token %}
+      <input type="text" name="city" placeholder="Enter City" required>
+      <button class="btn-save">Search</button>
+    </form>
+    {% endif %}
+
+    {% if donors %}
+    <table class="donor-table">
+      <thead>
+        <tr>
+          <th>ID</th><th>Name</th><th>Blood</th><th>Mobile</th><th>City</th><th>Gender</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for donor in donors %}
+        <tr>
+          <td>{{ donor.donor_id }}</td>
+          <td>{{ donor.name }}</td>
+          <td>{{ donor.blood_group }}</td>
+          <td>{{ donor.mobile }}</td>
+          <td>{{ donor.city }}</td>
+          <td>{{ donor.gender }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% endif %}
+
+  </div>
+</div>
+{% endif %}
+
+<!-- ================= SEARCH BLOOD ================= -->
+{% if show_search_bg %}
+<div class="donor-form-overlay show">
+  <div class="donor-card">
+
+    <div class="form-header">
+      <h2 class="donor-title">🩸 Search by Blood Group</h2>
+      <span class="form-close" onclick="closeForm()">✖</span>
+    </div>
+
+    {% if not donors %}
+    <form method="post" class="search-form">
+      {% csrf_token %}
+      <select name="blood_group" required>
+        <option value="">Select Blood Group</option>
+        <option>A+</option><option>A-</option>
+        <option>B+</option><option>B-</option>
+        <option>O+</option><option>O-</option>
+        <option>AB+</option><option>AB-</option>
+      </select>
+      <button class="btn-save">Search</button>
+    </form>
+    {% endif %}
+
+    {% if donors %}
+    <table class="donor-table">
+      <thead>
+        <tr>
+          <th>ID</th><th>Name</th><th>Blood</th><th>Mobile</th><th>City</th><th>Gender</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for donor in donors %}
+        <tr>
+          <td>{{ donor.donor_id }}</td>
+          <td>{{ donor.name }}</td>
+          <td>{{ donor.blood_group }}</td>
+          <td>{{ donor.mobile }}</td>
+          <td>{{ donor.city }}</td>
+          <td>{{ donor.gender }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% endif %}
+
+  </div>
+</div>
+{% endif %}
+
+<!-- ================= BLOOD STOCK ================= -->
+{% if show_add_stock %}
+
+<div class="donor-form-overlay show">  
+  <div class="donor-card">  <div class="form-header">  
+  <h2 class="donor-title">➕ Add Stock</h2>  
+  <span class="form-close" onclick="window.location.href='/home/'">✖</span>  
+</div>  
+
+<form method="post">  
+  {% csrf_token %}  
+
+  <div class="donor-grid">  
+    <div class="form-group">  
+      <label>Blood Group</label>  
+      <select name="blood_group" required>  
+        <option value="">Select</option>  
+        <option>A+</option><option>A-</option>  
+        <option>B+</option><option>B-</option>  
+        <option>O+</option><option>O-</option>  
+        <option>AB+</option><option>AB-</option>  
+      </select>  
+    </div>  
+
+    <div class="form-group">  
+      <label>Units</label>  
+      <input type="number" name="units" min="1" required>  
+    </div>  
+
+    <div class="form-actions">  
+      <button class="btn-save">Add Stock</button>  
+    </div>  
+  </div>  
+
+</form>
+
+  </div>  
+</div>  
+{% endif %}  {% if show_remove_stock %}
+
+<div class="donor-form-overlay show">  
+  <div class="donor-card">  <div class="form-header">  
+  <h2 class="donor-title">➖ Remove Stock</h2>  
+  <span class="form-close" onclick="window.location.href='/home/'">✖</span>  
+</div>  
+
+<form method="post">  
+  {% csrf_token %}  
+
+  <div class="donor-grid">  
+    <div class="form-group">  
+      <label>Blood Group</label>  
+      <select name="blood_group" required>  
+        <option value="">Select</option>  
+        <option>A+</option><option>A-</option>  
+        <option>B+</option><option>B-</option>  
+        <option>O+</option><option>O-</option>  
+        <option>AB+</option><option>AB-</option>  
+      </select>  
+    </div>  
+
+    <div class="form-group">  
+      <label>Units</label>  
+      <input type="number" name="units" min="1" required>  
+    </div>  
+
+    <div class="form-actions">  
+      <button class="btn-save">Remove Stock</button>  
+    </div>  
+  </div>  
+
+</form>
+
+  </div>  
+</div>  
+{% endif %}  {% if show_view_stock %}
+
+<div class="donor-form-overlay show">  
+  <div class="donor-card" style="max-width:600px;">  <div class="form-header">  
+  <h2 class="donor-title">🩸 Current Blood Stock</h2>  
+  <span class="form-close" onclick="closeForm()">✖</span>  
+</div>  
+
+<table class="donor-table">  
+  <thead>  
+    <tr>  
+      <th>Blood Group</th>  
+      <th>Available Units</th>  
+    </tr>  
+  </thead>  
+  <tbody>  
+    {% for stock in stocks %}  
+    <tr>  
+      <td>{{ stock.blood_group }}</td>  
+      <td>{{ stock.units }}</td>  
+    </tr>  
+    {% empty %}  
+    <tr>  
+      <td colspan="2" style="text-align:center;">No stock available</td>  
+    </tr>  
+    {% endfor %}  
+  </tbody>  
+</table>
+
+  </div>  
+</div>  
+{% endif %} 
+
+<!-- ================= DELETE DONOR ================= -->
+{% if show_delete_donor %}
+<div class="donor-form-overlay show">
+  <div class="donor-card">
+    <div class="form-header">
+      <h2 class="donor-title">🗑️ Delete Donor</h2>
+      <span class="form-close" onclick="closeForm()">✖</span>
+    </div>
+<form method="post" class="search-form">
+        {% csrf_token %}
+      <input type="text" name="donor_id" placeholder="Enter Donor ID" required>
+      <button type="submit" class="btn-save" style="background:#b71c1c;">Delete</button>
+    </form>
+  </div>
+</div>
+{% endif %}
+
+
+<!-- ================= CALL DONOR ================= -->
+ {% if show_call_form %}
+
+<div class="donor-form-overlay show">  
+  <div class="donor-card" style="max-width:900px;">  <div class="form-header">  
+  <h2 class="donor-title">📞 Call Donor (By Blood Group)</h2>  
+  <span class="form-close" onclick="window.location.href='/home/'">✖</span>  
+</div>  
+
+<!-- SEARCH FORM -->  
+<form method="post" class="search-form">  
+  {% csrf_token %}  
+
+  <select name="blood_group" required>  
+    <option value="">Select Blood Group</option>  
+    <option>A+</option><option>A-</option>  
+    <option>B+</option><option>B-</option>  
+    <option>O+</option><option>O-</option>  
+    <option>AB+</option><option>AB-</option>  
+  </select>  
+
+  <button type="submit" name="call_search" class="btn-save">  
+    Search  
+  </button>  
+</form>  
+
+<!-- RESULT TABLE -->  
+{% if call_donors %}  
+<table class="donor-table">  
+  <thead>  
+    <tr>  
+      <th>Name</th>  
+      <th>Mobile</th>  
+      <th>Action</th>  
+    </tr>  
+  </thead>  
+  <tbody>  
+    {% for donor in call_donors %}  
+    <tr>  
+      <td>{{ donor.name }}</td>  
+      <td>{{ donor.mobile }}</td>  
+      <td>  
+        <a href="tel:{{ donor.mobile }}" class="btn-save"  
+           style="text-decoration:none; padding:6px 14px;">  
+          📞 Call  
+        </a>  
+      </td>  
+    </tr>  
+    {% endfor %}  
+  </tbody>  
+</table>  
+{% endif %}  
+
+{% if call_donors|length == 0 and request.method == "POST" %}  
+  <p style="text-align:center; color:red;">  
+    No donors found for this blood group  
+  </p>  
+{% endif %}
+
+  </div>  
+</div>  
+{% endif %} 
+
+{% if messages %}
+  {% for message in messages %}
+    <div class="message-overlay">
+      <div class="message-box">
+        <div class="message {{ message.tags }}">
+          {{ message }}
+        </div>
+        <button class="btn-save" onclick="this.closest('.message-overlay').remove()">OK</button>
+      </div>
+    </div>
+  {% endfor %}
+{% endif %}
+<!-- ================= JS ================= -->
+<script>
+function toggleMenu(event, id) {
+  event.preventDefault();
+  document.querySelectorAll(".dropdown-menu").forEach(m => m.style.display = "none");
+  const menu = document.getElementById(id);
+  menu.style.display = (menu.style.display === "block") ? "none" : "block";
+}
+function closeForm() { window.location.href = "/home/"; }
+function closeMessage() {
+    document.querySelector(".message-overlay").style.display = "none";
+}
+</script>
+
+</body>
+</html>

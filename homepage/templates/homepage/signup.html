@@ -1,0 +1,51 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Sign Up - Blood Management</title>
+    <link rel="stylesheet" href="{% static 'homepage/home.css' %}">
+    <style>
+      .signup-box { max-width:400px;margin:60px auto;padding:24px;background:#fff;border-radius:8px;box-shadow:0 6px 18px rgba(0,0,0,0.08)}
+      .signup-box input{width:100%;padding:10px;margin:8px 0}
+      .signup-box button{width:100%;padding:10px;background:#c62828;color:white;border:none}
+    </style>
+</head>
+<body>
+  <div class="signup-box">
+    <h2>Create Account</h2>
+    {% if messages %}
+      <div class="message-block">
+        {% for message in messages %}
+          <div class="message {{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <form method="post">
+      {% csrf_token %}
+      {{ form.non_field_errors }}
+      <div>
+        {{ form.username.label_tag }}
+        {{ form.username }}
+        {{ form.username.errors }}
+      </div>
+      <div>
+        {{ form.password1.label_tag }}
+        {{ form.password1 }}
+        {{ form.password1.errors }}
+      </div>
+      <div>
+        {{ form.password2.label_tag }}
+        {{ form.password2 }}
+        {{ form.password2.errors }}
+      </div>
+      <div style="margin-top:12px">
+        <button type="submit">Sign up</button>
+      </div>
+    </form>
+
+    <p style="margin-top:12px">Already have an account? <a href="{% url 'login' %}">Login</a></p>
+  </div>
+</body>
+</html>
