@@ -6,7 +6,7 @@ databases:
 
 services:
   - type: web
-    name: bloodbank-web
+    name: bloodbank-management-abhi
     runtime: python
     plan: free
     buildCommand: ./build.sh
