@@ -1,10 +1,34 @@
-{% load static %}
+<!-- {% load static %} -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>Home | Blood Management</title>
   <link rel="stylesheet" href="{% static 'homepage/home.css' %}">
+  
+  <!-- Local Preview Fallback Script (Styles & Overlays) -->
+  {% verbatim %}
+  <script>
+    if (window.location.protocol === "file:") {
+        // Function to replace {% static 'path' %} with ../../static/path
+        function replaceStaticTags() {
+            var elements = document.querySelectorAll('[href], [src]');
+            for (var i = 0; i < elements.length; i++) {
+                var attr = elements[i].hasAttribute('href') ? 'href' : 'src';
+                var value = elements[i].getAttribute(attr);
+                if (value && value.includes('{% static')) {
+                    var match = value.match(/{%\s*static\s+['"]([^'"]+)['"]\s*%}/);
+                    if (match) {
+                        elements[i].setAttribute(attr, "../static/" + match[1]);
+                    }
+                }
+            }
+        }
+        replaceStaticTags();
+        document.write('<style>.all-overlays { display: none !important; }</style>');
+    }
+  </script>
+  {% endverbatim %}
 </head>
 <body>
 
@@ -77,6 +101,100 @@
   </ul>
 </nav>
 
+<main class="page-content">
+  <section class="eligibility-section">
+    <div class="section-header">
+      <h2>Blood Donation Eligibility Criteria</h2>
+      <p>To donate blood safely and responsibly, donors must meet the following requirements:</p>
+    </div>
+
+    <div class="eligibility-list">
+
+      <!-- BASIC ELIGIBILITY REQUIREMENTS -->
+      <div class="eligibility-category cat-basic">
+        <h3 class="category-title">✅ Basic Eligibility</h3>
+        <p class="category-subtitle">To donate safely, you must meet these basic criteria:</p>
+        <div class="eligibility-items-grid">
+          <div class="eligibility-item">
+            <h4>Age</h4>
+            <p>Generally 18 to 65 years old. Some areas allow 16–17 year-olds with parental consent.</p>
+          </div>
+          <div class="eligibility-item">
+            <h4>Weight</h4>
+            <p>Minimum weight of 45–50 kg (approximately 100–110 lbs) is required.</p>
+          </div>
+          <div class="eligibility-item">
+            <h4>Health Status</h4>
+            <p>Must be in good health, feeling well, and free from diseases that can be transmitted through blood.</p>
+          </div>
+          <div class="eligibility-item">
+            <h4>Hemoglobin Level</h4>
+            <p>Minimum hemoglobin level of 12.5 g/dL is required for safe blood donation.</p>
+          </div>
+          <div class="eligibility-item">
+            <h4>Vital Signs</h4>
+            <p>Normal pulse (50-100 bpm) and blood pressure (systolic 100-180 mmHg; diastolic 50-100 mmHg).</p>
+          </div>
+          <div class="eligibility-item">
+            <h4>Identification</h4>
+            <p>A valid photo ID is typically required for all donations.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- TEMPORARY DEFERRALS -->
+      <div class="eligibility-category cat-temp">
+        <h3 class="category-title">⏸️ Temporary Deferrals</h3>
+        <p class="category-subtitle">You may be eligible to donate after the waiting period:</p>
+        <div class="eligibility-items-grid">
+          <div class="eligibility-item">
+            <h4>Tattoos &amp; Piercings</h4>
+            <p>Usually requires a 6-month to 1-year wait before donating.</p>
+          </div>
+          <div class="eligibility-item">
+            <h4>Travel History</h4>
+            <p>Recent travel to malaria-prone areas or specific endemic countries requires a waiting period.</p>
+          </div>
+          <div class="eligibility-item">
+            <h4>Recent Medication</h4>
+            <p>Recent use of certain antibiotics or medications for infection may require a waiting period.</p>
+          </div>
+          <div class="eligibility-item">
+            <h4>Illness</h4>
+            <p>Donors with cold, flu, or infection must be completely symptom-free before donating.</p>
+          </div>
+          <div class="eligibility-item">
+            <h4>Vaccinations</h4>
+            <p>Some vaccines require a waiting period: 15 days for cholera vaccine, 1 year for rabies vaccine.</p>
+          </div>
+          <div class="eligibility-item">
+            <h4>Recent Surgery &amp; Pregnancy</h4>
+            <p>Recent surgery or pregnancy typically requires a recovery period before donating is allowed.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- PERMANENT DEFERRALS -->
+      <div class="eligibility-category cat-perm">
+        <h3 class="category-title">❌ Permanent Deferrals</h3>
+        <p class="category-subtitle">You cannot donate if you have the following conditions:</p>
+        <div class="eligibility-items-grid">
+          <div class="eligibility-item">
+            <h4>Infectious Diseases</h4>
+            <p>HIV, Hepatitis B, Hepatitis C, or Syphilis. Any of these infections permanently disqualify donation.</p>
+          </div>
+          <div class="eligibility-item">
+            <h4>Chronic Medical Conditions</h4>
+            <p>Certain cancers (leukemia, lymphoma), severe heart diseases, or high-risk behaviors may permanently disqualify donors.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<div class="all-overlays">
 <!-- ================= NEW DONOR ================= -->
 {% if show_new_form %}
 <div class="donor-form-overlay show">
@@ -270,9 +388,14 @@
     {% if not donors %}
     <form method="post" class="search-form">
       {% csrf_token %}
-      <input type="text" name="city" placeholder="Enter City" required>
+      <input type="text" name="city" placeholder="Enter City" required value="{{ city|default:'' }}">
       <button class="btn-save">Search</button>
     </form>
+    {% if search_location_searched %}
+      <p style="text-align:center; color:red; margin-top:16px;">
+        No donor found for this location.
+      </p>
+    {% endif %}
     {% endif %}
 
     {% if donors %}
@@ -316,13 +439,22 @@
       {% csrf_token %}
       <select name="blood_group" required>
         <option value="">Select Blood Group</option>
-        <option>A+</option><option>A-</option>
-        <option>B+</option><option>B-</option>
-        <option>O+</option><option>O-</option>
-        <option>AB+</option><option>AB-</option>
+        <option value="A+" {% if blood_group == 'A+' %}selected{% endif %}>A+</option>
+        <option value="A-" {% if blood_group == 'A-' %}selected{% endif %}>A-</option>
+        <option value="B+" {% if blood_group == 'B+' %}selected{% endif %}>B+</option>
+        <option value="B-" {% if blood_group == 'B-' %}selected{% endif %}>B-</option>
+        <option value="O+" {% if blood_group == 'O+' %}selected{% endif %}>O+</option>
+        <option value="O-" {% if blood_group == 'O-' %}selected{% endif %}>O-</option>
+        <option value="AB+" {% if blood_group == 'AB+' %}selected{% endif %}>AB+</option>
+        <option value="AB-" {% if blood_group == 'AB-' %}selected{% endif %}>AB-</option>
       </select>
       <button class="btn-save">Search</button>
     </form>
+    {% if search_bg_searched %}
+      <p style="text-align:center; color:red; margin-top:16px;">
+        No donor found for this blood group.
+      </p>
+    {% endif %}
     {% endif %}
 
     {% if donors %}
@@ -510,25 +642,27 @@
     <tr>  
       <th>Name</th>  
       <th>Mobile</th>  
-      <th>Action</th>  
-    </tr>  
-  </thead>  
-  <tbody>  
-    {% for donor in call_donors %}  
-    <tr>  
-      <td>{{ donor.name }}</td>  
-      <td>{{ donor.mobile }}</td>  
-      <td>  
-        <a href="tel:{{ donor.mobile }}" class="btn-save"  
-           style="text-decoration:none; padding:6px 14px;">  
-          📞 Call  
-        </a>  
-      </td>  
-    </tr>  
-    {% endfor %}  
-  </tbody>  
-</table>  
-{% endif %}  
+      <th>Blood Group</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for donor in call_donors %}
+    <tr>
+      <td>{{ donor.name }}</td>
+      <td>{{ donor.mobile }}</td>
+      <td>{{ donor.blood_group }}</td>
+      <td>
+        <a href="{% url 'call_donor_action' donor.id %}" class="btn-save"
+           style="text-decoration:none; padding:6px 14px;">
+          📞 Call &amp; Notify
+        </a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endif %}
 
 {% if call_donors|length == 0 and request.method == "POST" %}  
   <p style="text-align:center; color:red;">  
@@ -552,19 +686,32 @@
     </div>
   {% endfor %}
 {% endif %}
-<!-- ================= JS ================= -->
-<script>
-function toggleMenu(event, id) {
-  event.preventDefault();
-  document.querySelectorAll(".dropdown-menu").forEach(m => m.style.display = "none");
-  const menu = document.getElementById(id);
-  menu.style.display = (menu.style.display === "block") ? "none" : "block";
-}
-function closeForm() { window.location.href = "/home/"; }
-function closeMessage() {
-    document.querySelector(".message-overlay").style.display = "none";
-}
-</script>
+</div>
 
+<!-- ================= JS ================= -->
+<script src="{% static 'homepage/home.js' %}"></script>
+
+<!-- Local Preview Fallback Script (Images & Scripts) -->
+<script>
+  if (window.location.protocol === "file:") {
+      document.querySelectorAll('img').forEach(function(img) {
+          var src = img.getAttribute('src');
+          if (src && src.includes('{%')) {
+              var m = src.match(/static\s+['"]([^'"]+)['"]/);
+              if (m) img.src = "../../static/" + m[1];
+          }
+      });
+      
+      document.querySelectorAll('script').forEach(function(s) {
+          var src = s.getAttribute('src');
+          if (src && src.includes('{%')) {
+              var m = src.match(/static\s+['"]([^'"]+)['"]/);
+              if (m) {
+                  document.write('<script src="../../static/' + m[1] + '"><\/script>');
+              }
+          }
+      });
+  }
+</script>
 </body>
 </html>

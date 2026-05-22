@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -25,7 +26,7 @@ SECRET_KEY = 'django-insecure-^p%sltdciv52u871knu1nb##n6w!ee5*0fr*o7cj)5eq(k0k34
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0']
 
 
 # Application definition
@@ -37,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'channels',
     'homepage'
 ]
 
@@ -70,7 +72,13 @@ TEMPLATES = [
 
 
 WSGI_APPLICATION = 'BPProject.wsgi.application'
+ASGI_APPLICATION = 'BPProject.asgi.application'
 
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+    },
+}
 
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
@@ -121,6 +129,22 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     BASE_DIR / "static"
 ]
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
+# Email configuration
+EMAIL_BACKEND = os.environ.get(
+    'DJANGO_EMAIL_BACKEND',
+    'django.core.mail.backends.smtp.EmailBackend'
+)
+EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp.gmail.com')
+EMAIL_PORT = int(os.environ.get('EMAIL_PORT', 587))
+EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', 'True') == 'True'
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', 'abhishekbachan911@gmail.com')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', 'ycez hpxe negi jtuj')
+DEFAULT_FROM_EMAIL = os.environ.get(
+    'DEFAULT_FROM_EMAIL', 'Blood Bank <abhishekbachan911@gmail.com>'
+)
+ADMIN_EMAIL = os.environ.get('ADMIN_EMAIL', 'abhishekbachan911@gmail.com')
 
 # Redirect unauthenticated users to this URL
 LOGIN_URL = 'login'
