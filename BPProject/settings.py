@@ -85,7 +85,10 @@ CHANNEL_LAYERS = {
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-import dj_database_url
+try:
+    import dj_database_url
+except ImportError:
+    dj_database_url = None
 
 DATABASES = {
     'default': {
@@ -94,9 +97,10 @@ DATABASES = {
     }
 }
 
-db_from_env = dj_database_url.config(conn_max_age=600)
-if db_from_env:
-    DATABASES['default'].update(db_from_env)
+if dj_database_url:
+    db_from_env = dj_database_url.config(conn_max_age=600)
+    if db_from_env:
+        DATABASES['default'].update(db_from_env)
 
 
 # Password validation
